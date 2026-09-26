@@ -1,0 +1,129 @@
+# ==============================================================================
+# AI Hub Root .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Environment Variables, Secrets & Signing Credentials (NEVER COMMIT)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.env
+key.properties
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+google-services.json
+credentials.json
+service-account*.json
+
+# ------------------------------------------------------------------------------
+# Python & FastAPI
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+aihub.db
+
+# ------------------------------------------------------------------------------
+# Flutter & Dart
+# ------------------------------------------------------------------------------
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+# Flutter build artifacts
+build/
+**/build/
+**/android/build/
+**/android/app/build/
+*.apk
+*.ap_
+*.aab
+**/GeneratedPluginRegistrant.java
+**/GeneratedPluginRegistrant.kt
+
+# ------------------------------------------------------------------------------
+# Android & Gradle
+# ------------------------------------------------------------------------------
+.gradle/
+**/android/.gradle/
+**/android/.kotlin/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ------------------------------------------------------------------------------
+# IDEs & Operating System Files
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ------------------------------------------------------------------------------
+# Logs & Temporary Files
+# ------------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+crash_reports/
