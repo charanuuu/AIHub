@@ -10,11 +10,24 @@ from app.core.logging import logger
 
 Base = declarative_base()
 
-# Async engine configured from settings.DATABASE_URL
+is_sqlite = settings.DATABASE_URL.startswith("sqlite")
+
+engine_kwargs = {
+    "echo": False,
+    "future": True,
+}
+
+if is_sqlite:
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    engine_kwargs["pool_size"] = settings.DB_POOL_SIZE
+    engine_kwargs["max_overflow"] = settings.DB_MAX_OVERFLOW
+    engine_kwargs["pool_pre_ping"] = True
+
+# Async engine configured from settings.DATABASE_URL (PostgreSQL or SQLite)
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=False,
-    future=True,
+    **engine_kwargs,
 )
 
 async_session_factory = async_sessionmaker(

@@ -34,13 +34,23 @@ app = FastAPI(
 )
 
 # Configure CORS
+allow_credentials = False if ("*" in settings.CORS_ORIGINS) else settings.CORS_ALLOW_CREDENTIALS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from app.core.security import apply_security_headers
+
+# Security Headers Middleware
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    return apply_security_headers(response)
 
 # Global Exception Handler
 @app.exception_handler(Exception)

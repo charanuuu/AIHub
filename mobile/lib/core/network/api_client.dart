@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'network_exceptions.dart';
+import 'session_manager.dart';
 
 class ApiClient {
   final http.Client _client;
@@ -10,12 +11,20 @@ class ApiClient {
 
   ApiClient({http.Client? client}) : _client = client ?? http.Client();
 
-  Future<dynamic> get(String url) async {
+  Map<String, String> _buildHeaders({Map<String, String>? additionalHeaders}) {
+    return {
+      'Accept': 'application/json',
+      'X-Session-ID': SessionManager.getSessionId(),
+      if (additionalHeaders != null) ...additionalHeaders,
+    };
+  }
+
+  Future<dynamic> get(String url, {Map<String, String>? headers}) async {
     try {
       final response = await _client
           .get(
             Uri.parse(url),
-            headers: {'Accept': 'application/json'},
+            headers: _buildHeaders(additionalHeaders: headers),
           )
           .timeout(defaultTimeout);
 
@@ -30,15 +39,23 @@ class ApiClient {
     }
   }
 
-  Future<dynamic> post(String url, Map<String, dynamic> body) async {
+  Future<dynamic> post(
+    String url,
+    Map<String, dynamic> body, {
+    Map<String, String>? headers,
+  }) async {
     try {
+      final requestHeaders = _buildHeaders(
+        additionalHeaders: {
+          'Content-Type': 'application/json',
+          if (headers != null) ...headers,
+        },
+      );
+
       final response = await _client
           .post(
             Uri.parse(url),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
+            headers: requestHeaders,
             body: jsonEncode(body),
           )
           .timeout(defaultTimeout);
@@ -54,12 +71,12 @@ class ApiClient {
     }
   }
 
-  Future<dynamic> delete(String url) async {
+  Future<dynamic> delete(String url, {Map<String, String>? headers}) async {
     try {
       final response = await _client
           .delete(
             Uri.parse(url),
-            headers: {'Accept': 'application/json'},
+            headers: _buildHeaders(additionalHeaders: headers),
           )
           .timeout(defaultTimeout);
 

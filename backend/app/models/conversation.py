@@ -22,6 +22,7 @@ class Conversation(Base):
     __tablename__ = "conversations"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(64), nullable=False, default="default_user", index=True)
     title = Column(String(255), nullable=False, default="New Conversation")
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
@@ -41,6 +42,7 @@ class Message(Base):
     conversation_id = Column(
         String(36), ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False
     )
+    user_id = Column(String(64), nullable=True, index=True)
     role = Column(String(50), nullable=False)  # user, assistant, system, tool
     content = Column(Text, nullable=True)
     tool_calls = Column(JSON, nullable=True)
@@ -54,6 +56,8 @@ class ToolExecutionLog(Base):
     __tablename__ = "tool_execution_logs"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    conversation_id = Column(String(36), nullable=True, index=True)
+    user_id = Column(String(64), nullable=True, index=True)
     tool_name = Column(String(100), nullable=False)
     input_args = Column(JSON, nullable=False)
     output_data = Column(JSON, nullable=True)
