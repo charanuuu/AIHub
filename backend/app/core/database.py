@@ -10,7 +10,12 @@ from app.core.logging import logger
 
 Base = declarative_base()
 
-is_sqlite = settings.DATABASE_URL.startswith("sqlite")
+# Normalize URL if needed (e.g. legacy postgres:// -> postgresql://)
+db_url = settings.DATABASE_URL
+if db_url.startswith("postgres://"):
+    db_url = "postgresql://" + db_url[len("postgres://"):]
+
+is_sqlite = db_url.startswith("sqlite")
 
 engine_kwargs = {
     "echo": False,
@@ -26,7 +31,7 @@ else:
 
 # Async engine configured from settings.DATABASE_URL (PostgreSQL or SQLite)
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    db_url,
     **engine_kwargs,
 )
 
